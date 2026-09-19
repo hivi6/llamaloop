@@ -1,3 +1,4 @@
+import os
 import json
 
 import ollama
@@ -35,6 +36,7 @@ def addTwoNumbers(a: int, b: int) -> int:
 	return a + b
 
 
+# FIXME: Insecure cause can read contents of /etc/passwd and other stuffs
 def getFileContent(filepath: str) -> str:
 	"""Read the content of the filepath based on the user requests
 
@@ -48,6 +50,20 @@ def getFileContent(filepath: str) -> str:
 	except Exception as e:
 		raise ValueError(f"Couldn't read the content of '{filepath}': {e}")
 
+
+# FIXME: Insecure cause can get the files of any folder
+def getFiles(path: str) -> list[str]:
+	"""Get all the files under a given directory based on the user requests
+
+	Args:
+		path: path to which files are required
+	"""
+	try:
+		return os.listdir(path)
+	except Exception as e:
+		raise ValueError(f"Couldn't list files of '{path}': {e}")
+	
+
 # ========================================
 # llamaloop
 # ========================================
@@ -57,6 +73,7 @@ def availableTools() -> dict:
 	return {
 		"addTwoNumbers": addTwoNumbers,
 		"getFileContent": getFileContent,
+		"getFiles": getFiles,
 	}
 
 
